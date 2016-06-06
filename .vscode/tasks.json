@@ -1,0 +1,54 @@
+
+/*
+
+ To call the list of the tasks: (ctrl+p) and type "task " 
+
+   or
+
+ Add a keyboard shortcut in your user/keybindings.json file (File>Preferences>Keyboard shortcuts)
+ e.g. { 
+     "key": "ctrl+shift+t", 
+     "command": "workbench.action.tasks.runTask"
+    // "when": "editorTextFocus && editorLangId == 'red'" } // not tested
+ } 
+
+
+Variable substitution:
+    ${workspaceRoot} the path of the folder opened in VS Code
+    ${file} the current opened file (full path)
+    ${fileBasename} the current opened file's basename
+    ${fileDirname} the current opened file's dirname
+    ${fileExtname} the current opened file's extension
+    ${cwd} the task runner's current working directory on startup
+    
+*/
+
+{
+    "version":        "0.1.0",
+    "isShellCommand": true,
+    "showOutput":     "always",
+    "suppressTaskName": true, // don't add taskname in the issued command 
+    "linux":          { "command": "sh", "args": ["-c"] },
+    "windows":        { "command": "cmd.exe" },             // not tested
+    "osx":            { "command": "sh", "args": ["-c"] },  // not tested
+    "tasks": [
+        {
+            // check the syntax using rebol2 loader
+            "taskName": "Rebol syntax checking",
+ 
+            // -s               no file access security check
+            // -w               no window (print redirected to the OUTPUT panel)
+            // -v               no viewtop launch
+            // -q               no rebol banner 
+            // --do string      do some rebol code
+            "args": [
+                "../rebol.exe -wqvs --do \" load %${fileBasename} print 'ok quit \" "
+            ]
+        },
+        {
+            "taskName": "Rebol View",
+            "args": ["../rebol.exe -sv"]
+        }
+
+    ]
+}
